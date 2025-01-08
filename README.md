@@ -1,3 +1,5 @@
+<img src="https://sij.ai/sij/llux/raw/branch/main/welcome.jpg" width="400" alt="llux welcome image">
+
 # llux
 
 llux is an AI chatbot for the [Matrix](https://matrix.org/) chat protocol. It uses local LLMs via [Ollama](https://ollama.ai/) for chat and image recognition, and offers image generation via [Diffusers](https://github.com/huggingface/diffusers), specifically [FLUX.1](https://github.com/black-forest-labs/flux). Each user in a Matrix room can set a unique personality (or system prompt), and conversations are kept per user, per channel. Model switching is also supported if you have multiple models installed and configured.
