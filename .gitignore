@@ -1,0 +1,27 @@
+# Python cache and build artifacts
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# Virtual environment directories
+venv/
+.env/
+
+# Log files
+*.log
+
+# IDE or OS-specific files
+.DS_Store
+.idea/
+.vscode/
+
+# llux-specific
+temp/
+temp_dir/
+temp_images/
+llux.log
+
+# Local config files
+config.yaml
