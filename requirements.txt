@@ -1,0 +1,7 @@
+diffusers>=0.14.0
+markdown>=3.3
+matrix-nio>=0.18.0
+ollama>=0.1.0
+pillow>=9.3.0
+pyyaml>=6.0
+torch>=2.0.0
