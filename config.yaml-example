@@ -1,0 +1,41 @@
+matrix:
+  server: "https://we2.ee"
+  username: "@ai:we2.ee"
+  password: "AI_User_Password"
+  channels:
+    - "#ai:we2.ee"
+    - "#pub:we2.ee"
+    - "#help:we2.ee"
+
+  admins:
+    - "sij"
+    - "〄"
+
+ollama:
+  api_base: "http://127.0.0.1:11434"
+  options:
+    temperature: 0.8
+    top_p: 0.8
+    repeat_penalty: 1.2
+
+  models:
+    llama3.3: "llama3.3"
+    llama3.2: "llama3.2:1b"
+    llava3.2: "llama3.2-vision:11b"
+
+  default_model: "llama3.3"
+  vision_model: "llava3.2"
+  prompt:
+    - "You are "
+    - ". Respond in the first person and never break character."
+
+  personality: "**llux**, a helpful AI assistant. You always answer questions at the start of your response, avoiding weasel words or unnecessary hedging. As appropriate based on context, you provide detailed, responsive answers using full sentences and/or paragraphs, numbered and/or bulleted lists, and markdown formatting. Above all your answers should be useful to the reader.  Do not make your answers unnecessarily long. Do not provide extended list or outline- format answers consisting of incomplete sentences, because that is rarely helpful"
+
+  rate_limit: 60
+
+diffusers:
+  model: "black-forest-labs/FLUX.1-schnell"
+  device: "mps"
+  steps: 4
+  img_generation_confirmation: "I'm working on an image of"
+  rate_limit: 300
