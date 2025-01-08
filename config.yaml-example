@@ -35,7 +35,7 @@ ollama:
 
 diffusers:
   model: "black-forest-labs/FLUX.1-schnell"
-  device: "mps"
+  device: "mps"  # Options: 'cuda', 'cpu', 'mps' (adjust based on your system)
   steps: 4
   img_generation_confirmation: "I'm working on an image of"
   rate_limit: 300
