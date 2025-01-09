@@ -9,19 +9,20 @@ You're welcome to try the bot out on [We2.ee](https://we2.ee/about) at [#ai:we2.
 ## Getting Started
 
 1. **Install Ollama**  
-   You’ll need Ollama to run local LLMs (text and multimodal). A quick install:
+   You’ll need [Ollama](https://ollama.ai/) to run local LLMs (text and multimodal). A quick install:
 
    ```bash
    curl https://ollama.ai/install.sh | sh
    ```
 
-   Then pull your preferred model(s) with:
+   Choose your preferred models. For base chat functionality, good options include: [llama3.3](https://ollama.com/library/llama3.3) and [phi4](https://ollama.com/library/phi4). For multimodal chat, you’ll need a vision model. I recommend [llama3.2-vision](https://ollama.com/library/llama3.2-vision). This can be — but doesn’t have to be — the same as your base chat model.
+
+   Pull your chosen model(s) with:
 
    ```bash
    ollama pull <modelname>
    ```
 
-   > **Note**: For image recognition in multimodal chat, you’ll need a vision model. This can be—but doesn’t have to be—the same as your primary chat model.
 
 2. **Create a Python Environment (Recommended)**  
    You can use either `conda/mamba` or `venv`:
@@ -59,6 +60,8 @@ You're welcome to try the bot out on [We2.ee](https://we2.ee/about) at [#ai:we2.
    - **Copy `config.yaml-example` to `config.yaml`** (e.g., `cp config.yaml-example config.yaml`).
    - In your new `config.yaml`, fill in the relevant fields (Matrix server, username, password, channels, admin usernames, etc.). Also configure the Ollama section for your model settings and the Diffusers section for image generation (model, device, steps, etc.).
 
+   **Note**: this bot was designed for macOS on Apple Silicon. It has not been tested on Linux. It should work on Linux but might require some minor changes, particularly for image generation. At the very least you will need to change `device` in config.yaml from `mps` to your torch device.
+
 5. **Run llux**
    ```bash
    python3 llux.py
@@ -68,7 +71,10 @@ You're welcome to try the bot out on [We2.ee](https://we2.ee/about) at [#ai:we2.
 ## Usage
 
 - **.ai message** or **botname: message**  
-  Basic conversation or roleplay prompt.
+  Basic conversation or roleplay prompt. By replying with this prompt to an image attachment on Matrix, you engage your multimodal / vision model and can ask the model questions about the image attachment.
+
+- **.img prompt**
+  Generate an image with the prompt
 
 - **.x username message**  
   Interact with another user’s chat history (use the display name of that user).
@@ -93,4 +99,4 @@ You're welcome to try the bot out on [We2.ee](https://we2.ee/about) at [#ai:we2.
   - Include `modelname` to switch to that model.
 
 - **.clear**  
-  Reset llux for everyone, clearing all stored conversations and returning to the default settings.
+  Reset llux for everyone, clearing all stored conversations, deleting image cache, and returning to the default settings.
