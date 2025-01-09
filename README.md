@@ -60,7 +60,7 @@ You're welcome to try the bot out on [We2.ee](https://we2.ee/about) at [#ai:we2.
    - **Copy `config.yaml-example` to `config.yaml`** (e.g., `cp config.yaml-example config.yaml`).
    - In your new `config.yaml`, fill in the relevant fields (Matrix server, username, password, channels, admin usernames, etc.). Also configure the Ollama section for your model settings and the Diffusers section for image generation (model, device, steps, etc.).
 
-   **Note**: this bot was designed for macOS on Apple Silicon. It has not been tested on Linux. It should work on Linux but might require some minor changes, particularly for image generation. At the very least you will need to change `device` in config.yaml from `mps` to your torch device.
+   **Note**: this bot was designed for macOS on Apple Silicon. It has not been tested on Linux. It should work on Linux but might require some minor changes, particularly for image generation. At the very least you will need to change `device` in config.yaml from `mps` to your torch device, e.g., `cuda`.
 
 5. **Run llux**
    ```bash
