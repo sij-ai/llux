@@ -2,7 +2,7 @@
 
 # llux
 
-llux is an AI chatbot for the [Matrix](https://matrix.org/) chat protocol. It uses local LLMs via [Ollama](https://ollama.ai/) for chat and image recognition, and offers image generation via [Diffusers](https://github.com/huggingface/diffusers), specifically [FLUX.1](https://github.com/black-forest-labs/flux). Each user in a Matrix room can set a unique personality (or system prompt), and conversations are kept per user, per channel. Model switching is also supported if you have multiple models installed and configured.
+llux is an AI chatbot for the [Matrix](https://matrix.org/) chat protocol. It uses local LLMs via [Ollama](https://ollama.ai/) for chat and image recognition, offers image generation via [Diffusers](https://github.com/huggingface/diffusers), specifically [FLUX.1](https://github.com/black-forest-labs/flux), and an OpenAI-compatible API for text-to-speech (e.g. [Kokoro FasAPI by remsky](https://github.com/remsky/Kokoro-FastAPI)). Each user in a Matrix room can set a unique personality (or system prompt), and conversations are kept per user, per channel. Model switching is also supported if you have multiple models installed and configured.
 
 You're welcome to try the bot out on [We2.ee](https://we2.ee/about) at [#ai:we2.ee](https://we2.ee/@@ai).
 
@@ -75,6 +75,9 @@ You're welcome to try the bot out on [We2.ee](https://we2.ee/about) at [#ai:we2.
 
 - **.img prompt**
   Generate an image with the prompt
+
+- **.tts text**
+  Convert the provided text to speech
 
 - **.x username message**  
   Interact with another user’s chat history (use the display name of that user).
