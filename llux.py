@@ -15,6 +15,7 @@ import os
 import random
 import tempfile
 import time
+from openai import OpenAI
 from typing import Optional, Dict, Any
 
 import markdown
@@ -67,6 +68,20 @@ class Llux:
         self.diffusers_device = diffusers_config["device"]
         self.diffusers_steps = diffusers_config["steps"]
         self.img_generation_confirmation = diffusers_config["img_generation_confirmation"]
+        
+        # Text-to-speech configuration
+        # Example: reading from config["tts"] or you can just hard-code the base_url, model, etc.
+        tts_config = config.get("tts", {})
+        tts_url = tts_config.get("base_url")
+        tts_api_key = tts_config.get("api_key", "not-needed")
+        self.tts_model = tts_config.get("model", "kokoro")
+        self.tts_voice = tts_config.get("voice", "af_sky+af_bella")  # single or multiple voicepacks
+        
+        # Initialize TTS client
+        self.tts_client = OpenAI(
+            base_url=tts_url,
+            api_key=tts_api_key
+        )
 
         # Create Matrix client
         self.client = AsyncClient(self.server, self.username)
@@ -189,6 +204,44 @@ class Llux:
                 ),
             },
         )
+        
+    async def send_audio(self, channel: str, audio_path: str) -> None:
+        """
+        Upload and send an MP3 (or any audio) file to Matrix as m.audio.
+        """
+        try:
+            filename = os.path.basename(audio_path)
+            size_bytes = os.path.getsize(audio_path)
+            with open(audio_path, "rb") as f:
+                upload_response, upload_error = await self.client.upload(
+                    f,
+                    content_type="audio/mpeg",
+                    filename=filename
+                )
+            if upload_error:
+                self.logger.error(f"Failed to upload audio: {upload_error}")
+                return
+        
+            self.logger.debug(f"Successfully uploaded audio, URI: {upload_response.content_uri}")
+        
+            await self.client.room_send(
+                room_id=channel,
+                message_type="m.room.message",
+                content={
+                    "msgtype": "m.audio",
+                    "url": upload_response.content_uri,
+                    "body": filename,
+                    "info": {
+                        "mimetype": "audio/mpeg",
+                        "size": size_bytes,
+                        # you can also add "duration" here in ms if you want
+                    }
+                }
+            )
+        except Exception as e:
+            self.logger.error(f"Error sending audio: {e}", exc_info=True)
+            await self.send_message(channel, f"Failed to send audio: {str(e)}")
+
 
     async def send_image(self, channel: str, image_path: str) -> None:
         """
@@ -288,6 +341,65 @@ class Llux:
         except Exception as e:
             self.logger.error(f"Error downloading/processing image: {e}", exc_info=True)
             return None
+            
+    async def generate_tts(self, text: str) -> str:
+        """
+        Generate an audio (MP3) file for the given text using an OpenAI-compatible TTS server.
+        Returns the path to the MP3 file.
+        """
+        self.logger.info(f"Generating TTS for text: '{text}'")
+    
+        # Create a temporary file to store the result
+        fd, path = tempfile.mkstemp(suffix=".mp3", dir=self.temp_dir)
+        os.close(fd)  # We only need the path.
+    
+        try:
+            # Write `text` to some temporary input file if needed, or just pass it directly
+            # Here we just pass it directly to the TTS call.
+            with self.tts_client.audio.speech.with_streaming_response.create(
+                model=self.tts_model,
+                voice=self.tts_voice,
+                input=text,
+                response_format="mp3"
+            ) as response:
+                response.stream_to_file(path)
+    
+            self.logger.debug(f"TTS audio saved to {path}")
+            return path
+        except Exception as e:
+            self.logger.error(f"Error generating TTS audio: {e}", exc_info=True)
+            raise e
+    
+    async def generate_and_send_tts(self, channel: str, text: str, user_sender: str) -> None:
+        """
+        Wrapper that calls generate_tts() and then uploads/sends the MP3 to Matrix.
+        Also logs the event in conversation history.
+        """
+        try:
+            # A small courtesy message to let user know TTS is being prepared
+            confirmation_message = (
+                f"{user_sender} Generating TTS for: '{text}'. Please wait..."
+            )
+            await self.send_message(channel, confirmation_message)
+    
+            audio_path = await self.generate_tts(text)
+    
+            # Upload and send the audio file
+            await self.send_audio(channel, audio_path)
+    
+        except Exception as e:
+            err_msg = f"Error generating TTS: {str(e)}"
+            self.logger.error(err_msg, exc_info=True)
+            await self.send_message(channel, err_msg)
+        else:
+            # Optionally store the TTS output in the conversation history
+            await self.add_history(
+                role="assistant",
+                channel=channel,
+                sender=user_sender,
+                message=f"Generated TTS for text: {text}",
+                image_path=None  # no image, but you could store an "audio_path" variant if you like
+            )
 
     async def add_history(
         self,
@@ -656,6 +768,7 @@ class Llux:
           - .reset / .stock        : reset conversation to default or stock
           - .help                  : display help menus
           - .img                   : generate and send an image
+          - .tts                   : generate and send audio
           - .model / .clear        : admin commands
         """
         self.logger.debug(f"Handling message: {message[0]} from {sender_display}")
@@ -671,6 +784,7 @@ class Llux:
             ".stock": lambda: self.reset(channel, sender, sender_display, stock=True),
             ".help": lambda: self.help_menu(channel, sender_display),
             ".img": lambda: self.generate_and_send_image(channel, " ".join(message[1:]), sender),
+            ".tts": lambda: self.generate_and_send_tts(channel, " ".join(message[1:]), sender),
         }
 
         admin_commands = {
