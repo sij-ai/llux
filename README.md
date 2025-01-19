@@ -1,4 +1,4 @@
-<img src="https://sij.ai/sij/llux/raw/branch/main/welcome.jpg" width="400" alt="llux welcome image">
+<img src="https://sij.ai/sij/llux/raw/branch/main/ai_selfportrait.jpg" width="400" alt="llux self-portrait">
 
 # llux
 
