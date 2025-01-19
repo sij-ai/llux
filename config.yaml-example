@@ -39,3 +39,9 @@ diffusers:
   steps: 4
   img_generation_confirmation: "I'm working on an image of"
   rate_limit: 300
+
+tts:
+  base_url: "http://127.0.0.1:8880/v1"
+  api_key: "not-needed"
+  model: "kokoro"
+  voice: "af_sky+af_bella"
