@@ -22,6 +22,7 @@ ollama:
     llama3.3: "llama3.3"
     llama3.2: "llama3.2:1b"
     llava3.2: "llama3.2-vision:11b"
+    deepseek: "deepseek-r1:32b"
 
   default_model: "llama3.3"
   vision_model: "llava3.2"
