@@ -104,5 +104,5 @@ You're welcome to try the bot out on [We2.ee](https://we2.ee/about) at [#ai:we2.
 - **.clear**  
   Reset llux for everyone, clearing all stored conversations, deleting image cache, and returning to the default settings.
 
-### License & Attribution
+## License & Attribution
 **llux** is based in part on [ollamarama-matrix](https://github.com/h1ddenpr0cess20/ollamarama-matrix) by [h1ddenpr0cess20](https://github.com/h1ddenpr0cess20). For that reason it is covered by the same [AGPL-3.0 license](https://github.com/h1ddenpr0cess20/ollamarama-matrix/raw/refs/heads/main/LICENSE).
